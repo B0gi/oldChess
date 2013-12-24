@@ -1,0 +1,160 @@
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.Timer;
+
+public class MouseEventDemo extends MouseAdapter{
+    Frame frame;
+    Panel panelL;
+    Panel panelR;
+    Panel panelM;
+    Label text;
+     
+    public static void main(String[] args) {
+        new MouseEventDemo();     
+    }
+      
+    public MouseEventDemo() {
+    	ControlPanelLeft cpL = new ControlPanelLeft();
+    	ControlPanelRight cpR = new ControlPanelRight();
+    	ControlPanelMiddle cpM;
+        frame = new Frame("Five");
+        frame.addWindowListener(new AdapterDemo());
+        frame.setSize(750, 650);
+        
+
+        panelL = new Panel();
+        panelR = new Panel();
+        panelM = new Panel();
+        
+        panelM.addMouseListener(this);
+        text = new Label();
+        frame.add(new ControlPanelMiddle());
+        
+        panelM.add(text);
+        panelL.add(cpL,BorderLayout.WEST);
+        panelR.add(cpR,BorderLayout.EAST); 
+        
+        frame.add(panelL, BorderLayout.WEST);
+        //frame.add(panelM, BorderLayout.CENTER);
+        frame.add(panelR, BorderLayout.EAST);
+
+        frame.setVisible(true);
+    }
+
+    
+	public void mousePressed(MouseEvent e) {
+        text.setText("x: " + e.getX() + ", y: " + e.getY());
+        System.out.print("screen x: " + e.getXOnScreen());
+        System.out.print(", y: " + e.getYOnScreen() + "\n");
+        
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            System.out.println("left button");
+        }
+        if (e.getButton() == MouseEvent.BUTTON2) {
+            System.out.println("middle button");
+        }
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            System.out.println("right button");
+        }
+        
+        System.out.println("mouse position: " + e.getPoint());
+        System.out.println("mouse screen position: " + e.getLocationOnScreen());
+        System.out.println("mouse clicks: " + e.getClickCount());
+    }
+}
+
+class ControlPanelMiddle extends JComponent {
+	public static final int MARGIN=30;//?距  
+	public static final int GRID_SPAN=35;//网格?距  
+	public static final int ROWS=15;//棋?行?  
+	public static final int COLS=15;//棋?列?
+	public ControlPanelMiddle(){}
+	public void paintComponent(Graphics g){  
+		super.paintComponent(g);
+		for(int i=0;i<=ROWS;i++){//???  
+           g.drawLine(MARGIN, MARGIN+i*GRID_SPAN, MARGIN+COLS*GRID_SPAN, MARGIN+i*GRID_SPAN);  
+        }  
+        for(int i=0;i<=COLS;i++){//???  
+            g.drawLine(MARGIN+i*GRID_SPAN, MARGIN, MARGIN+i*GRID_SPAN, MARGIN+ROWS*GRID_SPAN);  
+             
+        }  
+	}
+}
+
+class ControlPanelRight extends Panel   {   
+    CheckboxGroup cbg = new CheckboxGroup();  
+    Button button = new Button("set");
+    Button b0 = new Button("regret"); 
+    Button b1 = new Button("Start");   
+    Button b2 = new Button("Renew");   
+    Button b3 = new Button("Help");   
+    Button b4 = new Button("Exit");   
+    public ControlPanelRight()   
+    {   
+    	add(button);
+        setLayout(new GridLayout(14,1,10,5));   
+        add(new Label());   
+        add(new Label());   
+        add(new Label());  
+        add(b0);
+        add(new Label());   
+        add(new Label());   
+        add(new Label());   
+        add(b1);   
+        add(b2);   
+        add(b3);   
+        add(b4);   
+        setBounds(0,0,500,500);   
+    }   
+}
+
+class ControlPanelLeft extends Panel implements ActionListener
+{   
+    CheckboxGroup cbg = new CheckboxGroup();   
+    int tm_unit=200, tm_sum =0;
+    int sec=0,tm_game =40;
+    Checkbox cb1 = new Checkbox("Black first",cbg,true);   
+    Checkbox cb2 = new Checkbox("White first",cbg,false);   
+    JLabel lblS = new JLabel("步數 = ");
+    JLabel lblT = new JLabel("時間 = ");
+    Timer timer = new Timer(tm_unit, this);
+    
+    public ControlPanelLeft()   
+    {   
+    	timer.restart();
+        setLayout(new GridLayout(14,1,10,5));   
+		add(cb1);   
+        add(cb2);   
+        add(new Label());   
+        add(new Label());   
+        add(new Label()); 
+        add(new Label());   
+        add(new Label());
+        add(new Label());   
+        add(new Label());
+        add(lblS);
+        add(lblT);
+        
+  
+    }   
+    public void timer_event() {
+  	  if ((tm_sum += tm_unit) >= 1000) {
+  		  tm_sum -= 1000;
+  		  sec+=1;
+  		  lblT.setText("時間= " + sec +"s");
+  	  }
+    }
+	public void actionPerformed(ActionEvent arg0) {
+		timer_event();
+	}
+
+}
+
+class AdapterDemo extends WindowAdapter {
+    public void windowClosing(WindowEvent e) {
+        System.exit(0);
+    }
+}

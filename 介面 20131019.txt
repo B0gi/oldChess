@@ -1,0 +1,83 @@
+import java.awt.*;
+import java.awt.event.*;
+
+public class MouseEventDemo extends MouseAdapter {
+    Frame frame;
+    Panel panel;
+    Panel panel2;
+    Label text;
+     
+    public static void main(String[] args) {
+        new MouseEventDemo();     
+    }
+      
+    public MouseEventDemo() {
+    	ControlPanel cp = new ControlPanel();
+        frame = new Frame("Five");
+        frame.addWindowListener(new AdapterDemo());
+        frame.setSize(500, 500);
+         
+        panel = new Panel();
+        panel2 = new Panel();
+        panel2.addMouseListener(this);
+        
+        text = new Label("---------------------------------------------------------------------------------------");
+        panel.add(cp,BorderLayout.EAST); 
+        panel2.add(text);
+        frame.add(panel, BorderLayout.EAST);
+        frame.add(panel2, BorderLayout.WEST);
+        frame.setVisible(true);
+    }
+
+
+	public void mousePressed(MouseEvent e) {
+        text.setText("x: " + e.getX() + ", y: " + e.getY());
+        System.out.print("screen x: " + e.getXOnScreen());
+        System.out.print(", y: " + e.getYOnScreen() + "\n");
+         
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            System.out.println("left button");
+        }
+        if (e.getButton() == MouseEvent.BUTTON2) {
+            System.out.println("middle button");
+        }
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            System.out.println("right button");
+        }
+         
+        System.out.println("mouse position: " + e.getPoint());
+        System.out.println("mouse screen position: " + e.getLocationOnScreen());
+        System.out.println("mouse clicks: " + e.getClickCount());
+    }
+}
+class ControlPanel extends Panel   
+{   
+    CheckboxGroup cbg = new CheckboxGroup();   
+    
+    Checkbox cb1 = new Checkbox("黑方先",cbg,true);   
+    Checkbox cb2 = new Checkbox("白方先",cbg,false);   
+    Button b1 = new Button("開始");   
+    Button b2 = new Button("重新開始");   
+    Button b3 = new Button("幫助");   
+    Button b4 = new Button("退出");   
+    ControlPanel()   
+    {   
+        setLayout(new GridLayout(14,1,10,5));   
+           
+        add(cb1);   
+        add(cb2);   
+        add(new Label());   
+        add(new Label());   
+        add(new Label());   
+        add(b1);   
+        add(b2);   
+        add(b3);   
+        add(b4);   
+        setBounds(0,0,500,500);   
+    }   
+}   
+class AdapterDemo extends WindowAdapter {
+    public void windowClosing(WindowEvent e) {
+        System.exit(0);
+    }
+}
